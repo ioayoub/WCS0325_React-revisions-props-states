@@ -1,4 +1,4 @@
-import CardList from "./components/CardList";
+import { Outlet } from "react-router";
 import Footer from "./components/Footer";
 import Navbar from "./components/navbar/Navbar";
 
@@ -6,7 +6,9 @@ function App() {
   return (
     <>
       <Navbar />
-      <CardList />
+
+      <Outlet />
+
       <Footer />
     </>
   );
