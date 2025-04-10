@@ -1,6 +1,7 @@
 import App from "./App";
 import ContactPage from "./pages/ContactPage";
 import HomePage from "./pages/HomePage";
+import ProductPage from "./pages/ProductPage";
 
 export const routes = [
   {
@@ -10,7 +11,10 @@ export const routes = [
         path: "/",
         element: <HomePage />,
       },
-
+      {
+        path: "/product/:id",
+        element: <ProductPage />,
+      },
       {
         path: "contact",
         element: <ContactPage />,

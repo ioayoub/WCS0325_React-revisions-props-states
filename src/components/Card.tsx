@@ -1,3 +1,5 @@
+import { NavLink } from "react-router";
+
 export default function Card({ product }) {
   return (
     <article className="max-w-sm rounded overflow-hidden shadow-lg bg-white">
@@ -15,6 +17,7 @@ export default function Card({ product }) {
           {product.category}
         </span>
       </div>
+      <NavLink to={`/product/${product.id}`}>En savoir plus</NavLink>
     </article>
   );
 }
