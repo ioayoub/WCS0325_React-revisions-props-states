@@ -1,26 +1,34 @@
-import { useState } from "react";
-import products from "../assets/data/products.json";
+import { useEffect, useState } from "react";
+import { productType } from "../lib/definitions";
 import Card from "./Card";
 
 export default function CardList() {
-  const [filteredProducts, setFilteredProducts] = useState(products);
+  const [products, setProducts] = useState<productType[] | null>(null);
+  const [filteredProducts, setFilteredProducts] = useState<
+    productType[] | null
+  >(products);
+  const [categories, setCategories] = useState<string[] | null>(null);
 
-  // Syntaxe raccourcie directement (explications à venir)
-  // TODO A suivre : affichage des boutons de façon dynamique
-  const categories = products.map((p) => p.category);
+  useEffect(() => {
+    fetch("https://ioayoub.fr/api/eshop")
+      .then((response) => response.json())
+      .then((data) => setProducts(data));
+  }, []);
 
-  // new Set(tableau) --> retourne valeurs uniques
-  const uniqueSet = new Set(categories);
+  useEffect(() => {
+    if (products) {
+      // const categories = products.map((p) => p.category);
 
-  // ... extraire les valeurs et les insérer dans un tableau
-  const extractedValuesToArray = [...uniqueSet];
+      // new Set(tableau) --> retourne valeurs uniques
+      // const uniqueSet = new Set(categories);
 
-  // ou syntaxe raccourcie :
-  // const categories = [...new Set(products.map((p) => p.category)]
+      // ... extraire les valeurs et les insérer dans un tableau
+      // const extractedValuesToArray = [...uniqueSet];
 
-  // []
-
-  // TODO A suivre : Ajouter le typage
+      // ou syntaxe raccourcie :
+      setCategories([...new Set(products.map((p) => p.category))]);
+    }
+  }, [products]);
 
   // console.log("categories", categories);
 
@@ -29,34 +37,43 @@ export default function CardList() {
       <button
         className="border p-4"
         onClick={() =>
-          setFilteredProducts(products.filter((p) => p.category.includes("")))
+          setFilteredProducts(
+            products && products.filter((p) => p.category.includes(""))
+          )
         }
       >
         Tout
       </button>
 
-      {extractedValuesToArray.map((c) => (
-        <button
-          className="border p-4"
-          onClick={() =>
-            setFilteredProducts(
-              products.filter((p) =>
-                p.category
-                  .trim()
-                  .toLocaleLowerCase()
-                  .includes(c.trim().toLocaleLowerCase())
+      {categories &&
+        categories.map((c) => (
+          <button
+            className="border p-4"
+            onClick={() =>
+              setFilteredProducts(
+                products &&
+                  products.filter((p) =>
+                    p.category
+                      .trim()
+                      .toLocaleLowerCase()
+                      .includes(c.trim().toLocaleLowerCase())
+                  )
               )
-            )
-          }
-        >
-          {c}
-        </button>
-      ))}
+            }
+          >
+            {c}
+          </button>
+        ))}
 
       <div className="flex flex-wrap gap-12 justify-center my-12">
-        {filteredProducts.map((p) => (
-          <Card key={p.id} product={p} />
-        ))}
+        {filteredProducts ? (
+          filteredProducts.map((p) => <Card key={p.id} product={p} />)
+        ) : (
+          <>
+            <div className="border-gray-300 h-20 w-20 animate-spin rounded-full border-8 border-t-blue-600" />
+            <h1>Chargement en cours ...</h1>
+          </>
+        )}
       </div>
     </>
   );
