@@ -27,6 +27,7 @@ export default function CardList() {
 
       // ou syntaxe raccourcie :
       setCategories([...new Set(products.map((p) => p.category))]);
+      setFilteredProducts(products);
     }
   }, [products]);
 
@@ -34,36 +35,39 @@ export default function CardList() {
 
   return (
     <>
-      <button
-        className="border p-4"
-        onClick={() =>
-          setFilteredProducts(
-            products && products.filter((p) => p.category.includes(""))
-          )
-        }
-      >
-        Tout
-      </button>
+      <div className="flex gap-4 justify-center my-12">
+        <button
+          className="border px-4 py-2 bg-slate-500 text-white cursor-pointer"
+          onClick={() =>
+            setFilteredProducts(
+              products && products.filter((p) => p.category.includes(""))
+            )
+          }
+        >
+          Tout
+        </button>
 
-      {categories &&
-        categories.map((c) => (
-          <button
-            className="border p-4"
-            onClick={() =>
-              setFilteredProducts(
-                products &&
-                  products.filter((p) =>
-                    p.category
-                      .trim()
-                      .toLocaleLowerCase()
-                      .includes(c.trim().toLocaleLowerCase())
-                  )
-              )
-            }
-          >
-            {c}
-          </button>
-        ))}
+        {categories &&
+          categories.map((c, index) => (
+            <button
+              key={index}
+              className="border px-4 py-2 bg-slate-500 text-white cursor-pointer"
+              onClick={() =>
+                setFilteredProducts(
+                  products &&
+                    products.filter((p) =>
+                      p.category
+                        .trim()
+                        .toLocaleLowerCase()
+                        .includes(c.trim().toLocaleLowerCase())
+                    )
+                )
+              }
+            >
+              {c}
+            </button>
+          ))}
+      </div>
 
       <div className="flex flex-wrap gap-12 justify-center my-12">
         {filteredProducts ? (
